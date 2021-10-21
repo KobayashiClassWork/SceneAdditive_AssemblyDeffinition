@@ -8,13 +8,20 @@ public class Player : MonoBehaviour, IManaged
     float m_moveForce = 30f;
     Rigidbody m_rb = null;
     bool m_hasInitialized = false;
-    IGameSceneController m_gameSceneController = null;
 
-    public void Initialize(IGameSceneController gameSceneController)
+    public IGameSceneController gameSceneController { get; set; }
+
+    public void Initialize()
     {
-        m_gameSceneController = gameSceneController;
         m_rb = GetComponent<Rigidbody>();
         m_hasInitialized = true;
+    }
+
+    public void Setup()
+    {
+        transform.position = Vector3.zero;
+        transform.rotation = Quaternion.identity;
+        m_rb.Sleep();
     }
 
     private void Update()
@@ -35,14 +42,12 @@ public class Player : MonoBehaviour, IManaged
         switch (collision.gameObject.tag)
         {
             case "Goal":
-
+                gameSceneController.SceneMext();
                 break;
 
             case "Dead":
-
+                gameSceneController.SceneReload();
                 break;
         }
     }
-
-
 }
